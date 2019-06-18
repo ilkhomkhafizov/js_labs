@@ -1,0 +1,67 @@
+<html>
+  <head></head>
+  <body>
+    <h2>Khafizov Ilkhom</h2>
+    <h1>Добавить элементы</h1>
+    <div class="input__quantity">
+      <label>Введите количество элементов:
+        <input type="number" class="quantity" value="4">
+      </label>
+      <button class="add">Add</button>
+    </div>
+    <div class="input__block" style="margin-top: 20px"></div>
+    <button class="go" style="visibility:hidden; margin-top: 20px">Go</button>
+    <input type="text" style="visibility:hidden; margin-top: 20px" class="f0">
+    <input type="text" style="visibility:hidden; margin-top: 20px" class="f1">
+    <script>  
+        var url = 'https://3336.kodaktor.ru/funcpsst';
+        var request = new XMLHttpRequest();
+      
+ 		document.querySelector('.add').addEventListener('click', function(evt) 	{
+			evt.preventDefault;
+      		if (document.querySelector('.quantity').value === '' || document.querySelector('.quantity').value < 4) {
+              alert('Введите кол-во > 4!') 
+            } else {
+        	let quantity = document.querySelector('.quantity').value;
+        	for (let i=0; i<quantity; i++) {
+          		let input = document.createElement('input');
+          		input.setAttribute('class', 'in');
+          		input.setAttribute('type', 'number');
+          		input.setAttribute('value', Math.floor(Math.random()*100+1));
+          		document.querySelector('.input__block').appendChild(input);
+       		}
+        	document.querySelector('.go').style.visibility = 'visible';
+        	document.querySelector('.f0').style.visibility = 'visible';
+        	document.querySelector('.f1').style.visibility = 'visible';
+      		}
+    	});
+
+        request.open('POST', url, true);
+    
+        request.onload = function() {
+    		let {g: g} = JSON.parse(this.response);
+
+      	//	const f = g.map(function(gItem) {
+        //		let func = new Function ('...x', gItem);
+        //		return func;       
+      	//	});  
+			const f = g.map(gItem => new Function('...x', gItem));    
+    
+            document.querySelector('.go').addEventListener('click', function(evt) { 
+                let inputs = Array.from(document.querySelectorAll('.in'));
+        //      inputs = inputs.map(function(item) {
+        //          return +item.value;
+        //      });
+              	inputs = inputs.map(item => +item.value);
+              
+
+                console.log(f[0], f[1]);
+                document.querySelector('.f0').value = f[0].apply(null, inputs);
+                document.querySelector('.f1').value = f[1].apply(null, inputs);  
+            });
+		};
+  		request.send();
+    </script>
+
+  </body>
+</html>
